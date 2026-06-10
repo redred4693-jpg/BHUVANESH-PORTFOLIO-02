@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bhuvanesh Portfolio</title>
+<link rel="icon" type="image/png" href="me.jpg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">BHUVANESH<span>.💗</span></div>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#skills">My skills</a>
+        <a href="#services">Services</a>
+        <a href="#project-video">Projects</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+   <button class="btn" onclick="window.open('https://www.instagram.com/__red__balloon?igsh=d250ZHEwbWo3aG54','_blank')">
+    Let's Talk
+</button>
+</header>
+
+<section class="hero" id="home">
+
+    <div class="hero-text">
+        <h3>Hello, I'm</h3>
+        <h1>S BHVANESHWARAN</h1>
+        <h2>Web Developer</h2>
+
+        <p>
+            I create modern, responsive and user-friendly websites
+            using HTML, CSS, JavaScript and React.
+        </p>
+
+        <button class="btn">View My Work</button>
+        <button class="btn-outline">Download CV</button>
+
+        <div class="social">
+            <i class="fab fa-github"></i>
+            <i class="fab fa-linkedin"></i>
+            <i class="fab fa-instagram"></i>
+        </div>
+    </div>
+
+    <div class="hero-img">
+        <img src="PHOTOS.jpg" alt="">
+    </div>
+
+</section>
+
+<section class="about" id="about">
+
+    <div class="about-img">
+        <img src="PHOTOS.jpg" alt="">
+    </div>
+
+    <div class="about-text">
+        <h2>About Me:</h2>
+<br>
+        <p>
+            I am Bhuvanesh, a passionate Web Developer with experience in
+            creating responsive websites.
+            I enjoy solving problems and building beautiful user interfaces.
+        </p>
+
+        <div class="bio">
+            <p><strong>Name:</strong> Bhuvaneshwaran S</p>
+            <p><strong>Location:</strong> Tamil Nadu, India</p>
+            <p><strong>Education:</strong> BSC-'Computer Science'</p>
+            <p><strong>Email:</strong> bhuvanesh1720@gamil.com</p>
+        </div>
+    </div>
+
+</section>
+
+<section class="skills" id="skills">
+
+<h2>My Skills</h2>
+
+<div class="skills-container">
+
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTML"
+target="_blank" class="skill-card">
+<img src="html.jpeg" alt="HTML">
+<h3>HTML</h3>
+</a>
+
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS"
+target="_blank" class="skill-card">
+<img src="css.png" alt="CSS">
+<h3>CSS</h3>
+</a>
+
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+target="_blank" class="skill-card">
+<img src="java script.png" alt="JavaScript">
+<h3>JavaScript</h3>
+</a>
+
+<a href="https://jquery.com/"
+target="_blank" class="skill-card">
+<img src="j query.png" alt="jquery">
+<h3>Jquery</h3>
+</a>
+
+<a href="https://getbootstrap.com/"
+target="_blank" class="skill-card">
+<img src="bootstrap.jpeg" alt="bootstrap">
+<h3>Bootstrap</h3>
+</a>
+
+</div>
+
+</section>
+
+<section class="services" id="services">
+
+    <h2>Services</h2>
+
+    <div class="service-container">
+
+        <div class="card">
+            <i class="fa-solid fa-code"></i>
+            <h3>Web Development</h3>
+            <p>Modern website development.</p>
+        </div>
+
+        <div class="card">
+            <i class="fa-solid fa-mobile-screen"></i>
+            <h3>Responsive Design</h3>
+            <p>Mobile friendly websites.</p>
+        </div>
+
+        <div class="card">
+            <i class="fa-solid fa-palette"></i>
+            <h3>UI Design</h3>
+            <p>Beautiful user interfaces.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<section id="project-video">
+
+    <h2>My Project</h2>
+<br>
+    <img id="thumbnail" src="img for restaurant.png" alt="Project Image">
+
+    <video id="myVideo" controls>
+        <source src="Screen Recording 2026-06-10 092149.mp4" type="video/mp4">
+    </video>
+
+</section>
+
+
+<section class="contact" id="contact">
+
+    <h2>Contact Me</h2>
+
+    <form>
+
+        <input type="text" placeholder="Your Name">
+
+        <input type="email" placeholder="Email">
+
+        <textarea placeholder="Message"></textarea>
+
+        <button class="btn">Send Message</button>
+
+    </form>
+
+</section>
+
+<footer>
+    <p>© 2026 Bhuvanesh Portfolio💗 | All Rights Reserved</p>
+</footer>
+
+<script>
+
+// this script for my project
+
+const thumbnail = document.getElementById("thumbnail");
+const video = document.getElementById("myVideo");
+
+video.loop = true;
+
+thumbnail.addEventListener("click", function() {
+    thumbnail.style.display = "none";
+    video.style.display = "block";
+    video.play();
+});
+//
+
+
+</script>
+
+</body>
+</html>
