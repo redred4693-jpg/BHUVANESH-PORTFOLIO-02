@@ -7,23 +7,29 @@
 <link rel="icon" type="image/png" href="me.jpg">
 <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-<header>
-    <div class="logo">BHUVANESH<span>.💗</span></div>
+<header class="top-navbar">
 
-    <nav>
+    <div class="brand-logo">
+        BHUVANESH<span>.💗</span>
+    </div>
+
+    <nav class="menu-links">
         <a href="#home">Home</a>
         <a href="#about">About</a>
-        <a href="#skills">My skills</a>
+        <a href="#skills">My Skills</a>
         <a href="#services">Services</a>
         <a href="#project-video">Projects</a>
         <a href="#contact">Contact</a>
     </nav>
 
-   <button class="btn" onclick="window.open('https://www.instagram.com/__red__balloon?igsh=d250ZHEwbWo3aG54','_blank')">
-    Let's Talk
-</button>
+    <button class="talk-btn"
+        onclick="window.open('https://www.instagram.com/__red__balloon?igsh=d250ZHEwbWo3aG54','_blank')">
+        Let's Talk
+    </button>
+
 </header>
 
 <section class="hero" id="home">
@@ -35,11 +41,11 @@
 
         <p>
             I create modern, responsive and user-friendly websites
-            using HTML, CSS, JavaScript and React.
+            using HTML, CSS, JavaScript.
         </p>
-
-        <button class="btn">View My Work</button>
-        <button class="btn-outline">Download CV</button>
+        <br>
+         <a href="#project-video"><button class="btn">View My Work</button></a>
+        
 
         <div class="social">
             <i class="fab fa-github"></i>
@@ -57,12 +63,13 @@
 <section class="about" id="about">
 
     <div class="about-img">
-        <img src="PHOTOS.jpg" alt="">
+        <img src="me1.jpeg" alt="Profile Image">
     </div>
 
     <div class="about-text">
-        <h2>About Me:</h2>
-<br>
+        <h2>ABOUT ME:</h2>
+        <br>
+
         <p>
             I am Bhuvanesh, a passionate Web Developer with experience in
             creating responsive websites.
@@ -72,16 +79,17 @@
         <div class="bio">
             <p><strong>Name:</strong> Bhuvaneshwaran S</p>
             <p><strong>Location:</strong> Tamil Nadu, India</p>
-            <p><strong>Education:</strong> BSC-'Computer Science'</p>
-            <p><strong>Email:</strong> bhuvanesh1720@gamil.com</p>
+            <p><strong>Education:</strong> BSC - Computer Science</p>
+            <p><strong>Email:</strong> bhuvanesh1720@gmail.com</p>
         </div>
     </div>
 
 </section>
 
+
 <section class="skills" id="skills">
 
-<h2>My Skills</h2>
+<h2 class="skillsh2">MY SKILLS</h2>
 
 <div class="skills-container">
 
@@ -119,25 +127,25 @@ target="_blank" class="skill-card">
 
 </section>
 
-<section class="services" id="services">
+<section class="my-services" id="services">
 
-    <h2>Services</h2>
+    <h2>SERVICES</h2>
 
-    <div class="service-container">
+    <div class="my-services-wrapper">
 
-        <div class="card">
+        <div class="service-box">
             <i class="fa-solid fa-code"></i>
             <h3>Web Development</h3>
             <p>Modern website development.</p>
         </div>
 
-        <div class="card">
+        <div class="service-box">
             <i class="fa-solid fa-mobile-screen"></i>
             <h3>Responsive Design</h3>
             <p>Mobile friendly websites.</p>
         </div>
 
-        <div class="card">
+        <div class="service-box">
             <i class="fa-solid fa-palette"></i>
             <h3>UI Design</h3>
             <p>Beautiful user interfaces.</p>
@@ -147,59 +155,52 @@ target="_blank" class="skill-card">
 
 </section>
 
-<section id="project-video">
+<section id="project-video" class="project-showcase">
 
-    <h2>My Project => Click This Image</h2>
-<br>
-    <img id="thumbnail" src="img for restaurant.png" alt="Project Image">
+    <h2 class="project-title">MY PROJECT → Click this Image👇🏻</h2>
 
-    <video id="myVideo" controls>
-        <source src="Screen Recording 2026-06-10 092149.mp4" type="video/mp4">
-    </video>
+    <div class="project-container">
+
+        <img class="project-thumb" src="img for restaurant.png" alt="Project Image">
+
+        <video class="project-video" controls loop>
+            <source src="Screen Recording 2026-06-10 092149.mp4" type="video/mp4">
+        </video>
+
+    </div>
 
 </section>
 
 
-<section class="contact" id="contact">
+<section class="contact-section" id="contact">
 
-    <h2>Contact Me</h2>
+    <h2 class="contact-title">CONTACT ME</h2>
 
-    <form>
+    <form class="contact-form">
 
-        <input type="text" placeholder="Your Name">
+        <input type="text" placeholder="Your Name" class="contact-input">
 
-        <input type="email" placeholder="Email">
+        <input type="email" placeholder="Email" class="contact-input">
 
-        <textarea placeholder="Message"></textarea>
+        <textarea placeholder="Message" class="contact-textarea"></textarea>
 
-        <button class="btn">Send Message</button>
+        <button class="contact-btn">Send Message</button>
 
     </form>
 
 </section>
 
-<footer>
-    <p>© 2026 Bhuvanesh Portfolio💗 | All Rights Reserved</p>
+<footer class="portfolio-footer">
+
+    <p class="footer-text">
+        © 2026 Bhuvanesh Portfolio 💗 | All Rights Reserved
+    </p>
+
 </footer>
 
-<script>
 
-// this script for my project
-
-const thumbnail = document.getElementById("thumbnail");
-const video = document.getElementById("myVideo");
-
-video.loop = true;
-
-thumbnail.addEventListener("click", function() {
-    thumbnail.style.display = "none";
-    video.style.display = "block";
-    video.play();
-});
-//
-
-
-</script>
 
 </body>
+<script src="script.js"></script>
 </html>
+
