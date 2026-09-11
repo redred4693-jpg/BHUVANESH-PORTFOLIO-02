@@ -270,52 +270,397 @@ btn.style.transform="translateY(0) scale(1)";
 HERO END // END JAVASCRIPT
 ==============================*/
 
-/* ABOUT START */
-const about=document.querySelector(".about");
-const aboutText=document.querySelector(".about-text");
-const aboutImg=document.querySelector(".about-img");
-if(about){
-const aboutObserver=new IntersectionObserver(entries=>{
-entries.forEach(entry=>{
-if(entry.isIntersecting){
-about.classList.add("show");
-if(aboutText)aboutText.classList.add("show");
-if(aboutImg)aboutImg.classList.add("animate");
-}else{
-about.classList.remove("show");
-if(aboutText)aboutText.classList.remove("show");
-if(aboutImg)aboutImg.classList.remove("animate");
-}
-});
-},{threshold:.3});
-aboutObserver.observe(about);
-}
-/* ABOUT END */
+/*==============================
+ABOUT START
+==============================*/
+/*==============================
+ABOUT PREMIUM ENTRY ANIMATION
+==============================*/
 
-/* SKILLS START */
-const skills=document.querySelector(".skills");
-const skillCards=document.querySelectorAll(".skill-card");
-if(skills){
-const skillObserver=new IntersectionObserver(entries=>{
+document.addEventListener("DOMContentLoaded",()=>{
+
+const about=document.querySelector(".about");
+const aboutImg=document.querySelector(".about-img");
+const aboutText=document.querySelector(".about-text");
+const bioItems=document.querySelectorAll(".bio p");
+
+if(!about)return;
+
+const observer=new IntersectionObserver((entries)=>{
+
 entries.forEach(entry=>{
+
 if(entry.isIntersecting){
-skills.classList.add("show-section");
-skillCards.forEach((card,index)=>{
+
+about.classList.add("show");
+
+aboutImg?.classList.remove("animate");
+void aboutImg?.offsetWidth;
+aboutImg?.classList.add("animate");
+
+aboutText?.classList.remove("show");
+void aboutText?.offsetWidth;
+aboutText?.classList.add("show");
+
+bioItems.forEach((item,index)=>{
+
+item.style.transition="none";
+item.style.opacity="0";
+item.style.transform="translateY(60px) scale(.92)";
+
+requestAnimationFrame(()=>{
+
 setTimeout(()=>{
-card.classList.add("show");
-},index*200);
+
+item.style.transition="all .8s cubic-bezier(.22,1,.36,1)";
+item.style.opacity="1";
+item.style.transform="translateY(0) scale(1)";
+
+},index*150);
+
 });
+
+});
+
 }else{
-skills.classList.remove("show-section");
-skillCards.forEach(card=>{
-card.classList.remove("show");
+
+about.classList.remove("show");
+
+aboutImg?.classList.remove("animate");
+aboutText?.classList.remove("show");
+
+bioItems.forEach(item=>{
+
+item.style.transition="none";
+item.style.opacity="0";
+item.style.transform="translateY(60px) scale(.92)";
+
 });
+
 }
+
 });
-},{threshold:.25});
-skillObserver.observe(skills);
-}
-/* SKILLS END */
+
+},{
+threshold:.25,
+rootMargin:"0px 0px -15% 0px"
+});
+
+observer.observe(about);
+
+});
+
+/*==============================
+ABOUT END
+==============================*//*==============================*
+* SKILLS START
+*==============================*/
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const skills = document.querySelector(".skills");
+    const cards = document.querySelectorAll(".skill-card");
+
+    if (!skills || cards.length === 0) return;
+
+    let current = 0;
+    let skillInterval = null;
+    let entryTimer = null;
+    let sectionVisible = false;
+    let mouseCard = null;
+
+    /*==============================*
+    * REMOVE ACTIVE
+    *==============================*/
+
+    function removeActive() {
+        cards.forEach(card => {
+            card.classList.remove("auto-hover");
+        });
+    }
+
+    /*==============================*
+    * ACTIVATE CARD
+    *==============================*/
+
+    function activateCard(index) {
+
+        if (index < 0 || index >= cards.length) return;
+
+        removeActive();
+
+        cards[index].classList.add("auto-hover");
+
+        current = index;
+    }
+
+    /*==============================*
+    * STOP LOOP
+    *==============================*/
+
+    function stopLoop() {
+
+        if (skillInterval !== null) {
+            clearInterval(skillInterval);
+            skillInterval = null;
+        }
+    }
+
+    /*==============================*
+    * START LOOP
+    *==============================*/
+
+    function startLoop() {
+
+        stopLoop();
+
+        if (!sectionVisible) return;
+
+        if (mouseCard !== null) return;
+
+        /*
+        Entry animation முடிந்ததும்
+        first card immediately front
+        */
+
+        activateCard(current);
+
+        skillInterval = setInterval(() => {
+
+            if (!sectionVisible) return;
+
+            if (mouseCard !== null) return;
+
+            current++;
+
+            if (current >= cards.length) {
+                current = 0;
+            }
+
+            activateCard(current);
+
+        }, 1800);
+    }
+
+    /*==============================*
+    * ENTER SECTION
+    *==============================*/
+
+    function enterSection() {
+
+        sectionVisible = true;
+
+        stopLoop();
+
+        if (entryTimer !== null) {
+            clearTimeout(entryTimer);
+            entryTimer = null;
+        }
+
+        removeActive();
+
+        current = 0;
+        mouseCard = null;
+
+        skills.classList.add("active");
+
+        /*
+        10 cards maximum:
+        last delay = 1.5s
+        animation = .7s
+        */
+
+        const lastDelay = Math.min(
+            (cards.length - 1) * 0.15,
+            1.5
+        );
+
+        const entryDuration = 0.75;
+
+        const waitTime =
+            (lastDelay + entryDuration + 0.05) * 1000;
+
+        entryTimer = setTimeout(() => {
+
+            if (!sectionVisible) return;
+
+            if (mouseCard !== null) return;
+
+            current = 0;
+
+            startLoop();
+
+        }, waitTime);
+    }
+
+    /*==============================*
+    * EXIT SECTION
+    *==============================*/
+
+    function exitSection() {
+
+        sectionVisible = false;
+
+        stopLoop();
+
+        if (entryTimer !== null) {
+            clearTimeout(entryTimer);
+            entryTimer = null;
+        }
+
+        mouseCard = null;
+        current = 0;
+
+        removeActive();
+
+        /*
+        Section completely hide
+        */
+
+        skills.classList.remove("active");
+    }
+
+    /*==============================*
+    * INTERSECTION OBSERVER
+    *==============================*/
+
+    const observer = new IntersectionObserver(
+        entries => {
+
+            entries.forEach(entry => {
+
+                if (entry.isIntersecting) {
+
+                    if (!sectionVisible) {
+                        enterSection();
+                    }
+
+                } else {
+
+                    if (sectionVisible) {
+                        exitSection();
+                    }
+
+                }
+
+            });
+
+        },
+        {
+            threshold: 0.2
+        }
+    );
+
+    observer.observe(skills);
+
+    /*==============================*
+    * FAST CURSOR HOVER
+    *==============================*/
+
+    cards.forEach((card, index) => {
+
+        card.addEventListener("mouseenter", () => {
+
+            if (!sectionVisible) return;
+
+            /*
+            Automatic loop STOP
+            */
+
+            mouseCard = index;
+
+            stopLoop();
+
+            /*
+            Previous card immediately remove
+            */
+
+            cards.forEach(item => {
+                item.classList.remove("auto-hover");
+            });
+
+            /*
+            Current cursor card immediately front
+            */
+
+            card.classList.add("auto-hover");
+
+            current = index;
+
+        });
+
+        /*==============================*
+        * CURSOR LEAVE
+        *==============================*/
+
+        card.addEventListener("mouseleave", () => {
+
+            if (!sectionVisible) return;
+
+            mouseCard = null;
+
+            /*
+            Current card remove
+            */
+
+            card.classList.remove("auto-hover");
+
+            /*
+            Next card immediately front
+            */
+
+            let next = index + 1;
+
+            if (next >= cards.length) {
+                next = 0;
+            }
+
+            current = next;
+
+            activateCard(next);
+
+            /*
+            Continue loop
+            */
+
+            startLoop();
+
+        });
+
+    });
+
+    /*==============================*
+    * TOUCH SUPPORT
+    *==============================*/
+
+    cards.forEach((card, index) => {
+
+        card.addEventListener(
+            "touchstart",
+            () => {
+
+                if (!sectionVisible) return;
+
+                stopLoop();
+
+                mouseCard = index;
+
+                activateCard(index);
+
+            },
+            {
+                passive: true
+            }
+        );
+
+    });
+
+});
+
+/*==============================*
+* SKILLS END
+*==============================*/
+
 
 /* SERVICES START */
 const services=document.querySelector(".my-services");
