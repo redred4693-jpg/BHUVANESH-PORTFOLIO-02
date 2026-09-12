@@ -1,92 +1,63 @@
 /*==============================
 MENU START
-Understanding:
-Mobile Menu
 ==============================*/
-
 document.addEventListener("DOMContentLoaded",()=>{
-
 const menuToggle=document.querySelector(".menu-toggle");
 const menuLinks=document.querySelector(".menu-links");
-
+const navLinks=document.querySelectorAll(".menu-links a");
 if(menuToggle&&menuLinks){
-
 menuToggle.addEventListener("click",()=>{
-
 menuLinks.classList.toggle("active");
 menuToggle.innerHTML=menuLinks.classList.contains("active")?"✕":"☰";
-
 });
-
-document.querySelectorAll(".menu-links a").forEach(link=>{
-
+navLinks.forEach(link=>{
 link.addEventListener("click",()=>{
-
 menuLinks.classList.remove("active");
 menuToggle.innerHTML="☰";
-
 });
-
 });
-
 }
-
 /*==============================
 ACTIVE MENU HIGHLIGHT
 ==============================*/
-
-const sections = document.querySelectorAll("section[id]");
-const navLinks = document.querySelectorAll(".menu-links a");
-
-function activeMenu() {
-
-let scrollY = window.pageYOffset;
-
-sections.forEach(section => {
-
-const sectionHeight = section.offsetHeight;
-const sectionTop = section.offsetTop - 120;
-const sectionId = section.getAttribute("id");
-
-if(scrollY >= sectionTop && scrollY < sectionTop + sectionHeight){
-
-navLinks.forEach(link => {
-
-link.classList.remove("active");
-
-if(link.getAttribute("href") === "#" + sectionId){
-
-link.classList.add("active");
-
+function activeMenu(){
+const sections=document.querySelectorAll("section[id],.contact-section[id]");
+const scrollY=window.scrollY;
+let currentId="";
+let closestDistance=Infinity;
+sections.forEach(section=>{
+const rect=section.getBoundingClientRect();
+const sectionTop=rect.top+scrollY;
+const distance=Math.abs(scrollY+150-sectionTop);
+if(scrollY+150>=sectionTop&&scrollY+150<=sectionTop+section.offsetHeight){
+currentId=section.id;
 }
-
 });
-
-}
-
-});
-
-}
-
-window.addEventListener("scroll", activeMenu);
-window.addEventListener("load", activeMenu);
-
-/*==============================
-MENU CLICK ACTIVE
-==============================*/
-
+if(currentId){
 navLinks.forEach(link=>{
-
+link.classList.remove("active");
+});
+const activeLink=document.querySelector('.menu-links a[href="#'+currentId+'"]');
+if(activeLink){
+activeLink.classList.add("active");
+}
+}
+}
+navLinks.forEach(link=>{
 link.addEventListener("click",function(){
-
-navLinks.forEach(item=>item.classList.remove("active"));
-
+const href=this.getAttribute("href");
+if(!href||href==="#")return;
+navLinks.forEach(item=>{
+item.classList.remove("active");
+});
 this.classList.add("active");
-
 });
-
 });
-
+window.addEventListener("scroll",activeMenu,{passive:true});
+window.addEventListener("load",activeMenu);
+/*==============================
+MENU END
+==============================*/
 
 
 
@@ -273,12 +244,8 @@ HERO END // END JAVASCRIPT
 /*==============================
 ABOUT START
 ==============================*/
-/*==============================
-ABOUT PREMIUM ENTRY ANIMATION
-==============================*/
 
 document.addEventListener("DOMContentLoaded",()=>{
-
 const about=document.querySelector(".about");
 const aboutImg=document.querySelector(".about-img");
 const aboutText=document.querySelector(".about-text");
@@ -286,61 +253,81 @@ const bioItems=document.querySelectorAll(".bio p");
 
 if(!about)return;
 
-const observer=new IntersectionObserver((entries)=>{
+let loopTimer;
 
-entries.forEach(entry=>{
+const resetAbout=()=>{
+clearTimeout(loopTimer);
+about.classList.remove("show");
+aboutImg?.classList.remove("loop");
+aboutText?.classList.remove("loop");
+bioItems.forEach(item=>{
+item.style.transition="none";
+item.style.opacity="0";
+item.style.transform="translateX(-50px)";
+});
+};
 
-if(entry.isIntersecting){
+const showAbout=()=>{
+clearTimeout(loopTimer);
 
 about.classList.add("show");
 
-aboutImg?.classList.remove("animate");
-void aboutImg?.offsetWidth;
-aboutImg?.classList.add("animate");
+aboutImg?.classList.remove("loop");
+aboutText?.classList.remove("loop");
 
-aboutText?.classList.remove("show");
-void aboutText?.offsetWidth;
-aboutText?.classList.add("show");
-
-bioItems.forEach((item,index)=>{
-
-item.style.transition="none";
-item.style.opacity="0";
-item.style.transform="translateY(60px) scale(.92)";
-
-requestAnimationFrame(()=>{
-
-setTimeout(()=>{
-
-item.style.transition="all .8s cubic-bezier(.22,1,.36,1)";
-item.style.opacity="1";
-item.style.transform="translateY(0) scale(1)";
-
-},index*150);
-
-});
-
-});
-
-}else{
-
-about.classList.remove("show");
-
-aboutImg?.classList.remove("animate");
-aboutText?.classList.remove("show");
-
-bioItems.forEach(item=>{
-
-item.style.transition="none";
-item.style.opacity="0";
-item.style.transform="translateY(60px) scale(.92)";
-
-});
-
+if(aboutImg){
+aboutImg.style.transition="opacity 1.2s ease,transform 1.2s cubic-bezier(.22,1,.36,1)";
+aboutImg.style.opacity="0";
+aboutImg.style.transform="translateX(-120px)";
 }
 
+if(aboutText){
+aboutText.style.transition="opacity 1s ease,transform 1s cubic-bezier(.22,1,.36,1)";
+aboutText.style.opacity="0";
+aboutText.style.transform="translateX(70px)";
+}
+
+void about.offsetWidth;
+
+if(aboutImg){
+aboutImg.style.opacity="1";
+aboutImg.style.transform="translateX(0)";
+}
+
+if(aboutText){
+aboutText.style.opacity="1";
+aboutText.style.transform="translateX(0)";
+}
+
+bioItems.forEach((item,index)=>{
+item.style.transition="opacity .6s ease,transform .6s ease";
+item.style.opacity="0";
+item.style.transform="translateX(-50px)";
+
+setTimeout(()=>{
+if(about.classList.contains("show")){
+item.style.opacity="1";
+item.style.transform="translateX(0)";
+}
+},index*150);
 });
 
+loopTimer=setTimeout(()=>{
+if(about.classList.contains("show")){
+aboutImg?.classList.add("loop");
+aboutText?.classList.add("loop");
+}
+},1300);
+};
+
+const observer=new IntersectionObserver((entries)=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting){
+showAbout();
+}else{
+resetAbout();
+}
+});
 },{
 threshold:.25,
 rootMargin:"0px 0px -15% 0px"
@@ -352,315 +339,124 @@ observer.observe(about);
 
 /*==============================
 ABOUT END
-==============================*//*==============================*
+==============================*/
+
+/*==============================*
 * SKILLS START
 *==============================*/
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    const skills = document.querySelector(".skills");
-    const cards = document.querySelectorAll(".skill-card");
-
-    if (!skills || cards.length === 0) return;
-
-    let current = 0;
-    let skillInterval = null;
-    let entryTimer = null;
-    let sectionVisible = false;
-    let mouseCard = null;
-
-    /*==============================*
-    * REMOVE ACTIVE
-    *==============================*/
-
-    function removeActive() {
-        cards.forEach(card => {
-            card.classList.remove("auto-hover");
-        });
-    }
-
-    /*==============================*
-    * ACTIVATE CARD
-    *==============================*/
-
-    function activateCard(index) {
-
-        if (index < 0 || index >= cards.length) return;
-
-        removeActive();
-
-        cards[index].classList.add("auto-hover");
-
-        current = index;
-    }
-
-    /*==============================*
-    * STOP LOOP
-    *==============================*/
-
-    function stopLoop() {
-
-        if (skillInterval !== null) {
-            clearInterval(skillInterval);
-            skillInterval = null;
-        }
-    }
-
-    /*==============================*
-    * START LOOP
-    *==============================*/
-
-    function startLoop() {
-
-        stopLoop();
-
-        if (!sectionVisible) return;
-
-        if (mouseCard !== null) return;
-
-        /*
-        Entry animation முடிந்ததும்
-        first card immediately front
-        */
-
-        activateCard(current);
-
-        skillInterval = setInterval(() => {
-
-            if (!sectionVisible) return;
-
-            if (mouseCard !== null) return;
-
-            current++;
-
-            if (current >= cards.length) {
-                current = 0;
-            }
-
-            activateCard(current);
-
-        }, 1800);
-    }
-
-    /*==============================*
-    * ENTER SECTION
-    *==============================*/
-
-    function enterSection() {
-
-        sectionVisible = true;
-
-        stopLoop();
-
-        if (entryTimer !== null) {
-            clearTimeout(entryTimer);
-            entryTimer = null;
-        }
-
-        removeActive();
-
-        current = 0;
-        mouseCard = null;
-
-        skills.classList.add("active");
-
-        /*
-        10 cards maximum:
-        last delay = 1.5s
-        animation = .7s
-        */
-
-        const lastDelay = Math.min(
-            (cards.length - 1) * 0.15,
-            1.5
-        );
-
-        const entryDuration = 0.75;
-
-        const waitTime =
-            (lastDelay + entryDuration + 0.05) * 1000;
-
-        entryTimer = setTimeout(() => {
-
-            if (!sectionVisible) return;
-
-            if (mouseCard !== null) return;
-
-            current = 0;
-
-            startLoop();
-
-        }, waitTime);
-    }
-
-    /*==============================*
-    * EXIT SECTION
-    *==============================*/
-
-    function exitSection() {
-
-        sectionVisible = false;
-
-        stopLoop();
-
-        if (entryTimer !== null) {
-            clearTimeout(entryTimer);
-            entryTimer = null;
-        }
-
-        mouseCard = null;
-        current = 0;
-
-        removeActive();
-
-        /*
-        Section completely hide
-        */
-
-        skills.classList.remove("active");
-    }
-
-    /*==============================*
-    * INTERSECTION OBSERVER
-    *==============================*/
-
-    const observer = new IntersectionObserver(
-        entries => {
-
-            entries.forEach(entry => {
-
-                if (entry.isIntersecting) {
-
-                    if (!sectionVisible) {
-                        enterSection();
-                    }
-
-                } else {
-
-                    if (sectionVisible) {
-                        exitSection();
-                    }
-
-                }
-
-            });
-
-        },
-        {
-            threshold: 0.2
-        }
-    );
-
-    observer.observe(skills);
-
-    /*==============================*
-    * FAST CURSOR HOVER
-    *==============================*/
-
-    cards.forEach((card, index) => {
-
-        card.addEventListener("mouseenter", () => {
-
-            if (!sectionVisible) return;
-
-            /*
-            Automatic loop STOP
-            */
-
-            mouseCard = index;
-
-            stopLoop();
-
-            /*
-            Previous card immediately remove
-            */
-
-            cards.forEach(item => {
-                item.classList.remove("auto-hover");
-            });
-
-            /*
-            Current cursor card immediately front
-            */
-
-            card.classList.add("auto-hover");
-
-            current = index;
-
-        });
-
-        /*==============================*
-        * CURSOR LEAVE
-        *==============================*/
-
-        card.addEventListener("mouseleave", () => {
-
-            if (!sectionVisible) return;
-
-            mouseCard = null;
-
-            /*
-            Current card remove
-            */
-
-            card.classList.remove("auto-hover");
-
-            /*
-            Next card immediately front
-            */
-
-            let next = index + 1;
-
-            if (next >= cards.length) {
-                next = 0;
-            }
-
-            current = next;
-
-            activateCard(next);
-
-            /*
-            Continue loop
-            */
-
-            startLoop();
-
-        });
-
-    });
-
-    /*==============================*
-    * TOUCH SUPPORT
-    *==============================*/
-
-    cards.forEach((card, index) => {
-
-        card.addEventListener(
-            "touchstart",
-            () => {
-
-                if (!sectionVisible) return;
-
-                stopLoop();
-
-                mouseCard = index;
-
-                activateCard(index);
-
-            },
-            {
-                passive: true
-            }
-        );
-
-    });
-
+document.addEventListener("DOMContentLoaded",()=>{
+const skills=document.querySelector(".skills");
+const cards=document.querySelectorAll(".skill-card");
+if(!skills||cards.length===0)return;
+let current=0;
+let skillInterval=null;
+let entryTimer=null;
+let sectionVisible=false;
+let mouseCard=null;
+function removeActive(){
+cards.forEach(card=>{
+card.classList.remove("auto-hover");
 });
-
+}
+function activateCard(index){
+if(index<0||index>=cards.length)return;
+removeActive();
+cards[index].classList.add("auto-hover");
+current=index;
+}
+function stopLoop(){
+if(skillInterval!==null){
+clearInterval(skillInterval);
+skillInterval=null;
+}
+}
+function startLoop(){
+stopLoop();
+if(!sectionVisible||mouseCard!==null)return;
+activateCard(current);
+skillInterval=setInterval(()=>{
+if(!sectionVisible||mouseCard!==null)return;
+current++;
+if(current>=cards.length)current=0;
+activateCard(current);
+},1800);
+}
+function enterSection(){
+sectionVisible=true;
+stopLoop();
+if(entryTimer!==null){
+clearTimeout(entryTimer);
+entryTimer=null;
+}
+removeActive();
+current=0;
+mouseCard=null;
+skills.classList.add("active");
+const lastDelay=Math.min((cards.length-1)*0.15,1.5);
+const entryDuration=0.75;
+const waitTime=(lastDelay+entryDuration+0.05)*1000;
+entryTimer=setTimeout(()=>{
+if(!sectionVisible||mouseCard!==null)return;
+current=0;
+startLoop();
+},waitTime);
+}
+function exitSection(){
+sectionVisible=false;
+stopLoop();
+if(entryTimer!==null){
+clearTimeout(entryTimer);
+entryTimer=null;
+}
+mouseCard=null;
+current=0;
+removeActive();
+skills.classList.remove("active");
+}
+const observer=new IntersectionObserver(entries=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting){
+if(!sectionVisible)enterSection();
+}else{
+if(sectionVisible)exitSection();
+}
+});
+},{threshold:0.3});
+observer.observe(skills);
+cards.forEach((card,index)=>{
+card.addEventListener("mouseenter",()=>{
+if(!sectionVisible)return;
+mouseCard=index;
+stopLoop();
+cards.forEach(item=>{
+item.classList.remove("auto-hover");
+});
+card.classList.add("auto-hover");
+current=index;
+});
+card.addEventListener("mouseleave",()=>{
+if(!sectionVisible)return;
+mouseCard=null;
+card.classList.remove("auto-hover");
+let next=index+1;
+if(next>=cards.length)next=0;
+current=next;
+activateCard(next);
+startLoop();
+});
+});
+cards.forEach((card,index)=>{
+card.addEventListener("touchstart",()=>{
+if(!sectionVisible)return;
+stopLoop();
+mouseCard=index;
+activateCard(index);
+},{passive:true});
+});
+});
 /*==============================*
 * SKILLS END
 *==============================*/
-
 
 /* SERVICES START */
 const services=document.querySelector(".my-services");
@@ -672,7 +468,7 @@ if(entry.isIntersecting){
 services.classList.add("show");
 serviceCards.forEach((card,index)=>{
 setTimeout(()=>{
-card.classList.add("show");
+if(entry.isIntersecting)card.classList.add("show");
 },index*250);
 });
 }else{
@@ -698,6 +494,9 @@ if(entry.isIntersecting){
 project.classList.add("show");
 }else{
 project.classList.remove("show");
+if(video){
+video.pause();
+}
 }
 });
 },{threshold:.3});
@@ -709,7 +508,7 @@ thumbnail.style.display="none";
 video.style.display="block";
 setTimeout(()=>{
 video.classList.add("show");
-video.play();
+video.play().catch(()=>{});
 },100);
 });
 }
