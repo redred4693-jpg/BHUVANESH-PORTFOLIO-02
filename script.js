@@ -245,93 +245,195 @@ HERO END // END JAVASCRIPT
 ABOUT START
 ==============================*/
 
-document.addEventListener("DOMContentLoaded",()=>{
-const about=document.querySelector(".about");
-const aboutImg=document.querySelector(".about-img");
-const aboutText=document.querySelector(".about-text");
-const bioItems=document.querySelectorAll(".bio p");
+document.addEventListener("DOMContentLoaded", () => {
+const about = document.querySelector(".about");
+const aboutImg = document.querySelector(".about-img");
+const aboutText = document.querySelector(".about-text");
+const bioItems = document.querySelectorAll(".bio p");
 
-if(!about)return;
+if (!about) return;
 
 let loopTimer;
+let bioTimers = [];
 
-const resetAbout=()=>{
+/*==============================
+RESET ABOUT
+==============================*/
+
+const resetAbout = () => {
 clearTimeout(loopTimer);
+
+bioTimers.forEach(timer => clearTimeout(timer));
+bioTimers = [];
+
 about.classList.remove("show");
+
 aboutImg?.classList.remove("loop");
 aboutText?.classList.remove("loop");
-bioItems.forEach(item=>{
-item.style.transition="none";
-item.style.opacity="0";
-item.style.transform="translateX(-50px)";
+
+if (aboutImg) {
+aboutImg.style.transition = "none";
+aboutImg.style.opacity = "0";
+aboutImg.style.transform = "translateX(-120px) scale(.92)";
+}
+
+if (aboutText) {
+aboutText.style.transition = "none";
+aboutText.style.opacity = "0";
+aboutText.style.transform = "translateX(100px)";
+}
+
+bioItems.forEach(item => {
+item.style.transition = "none";
+item.style.opacity = "0";
+item.style.transform = "translateY(35px)";
 });
 };
 
-const showAbout=()=>{
+/*==============================
+SHOW ABOUT
+==============================*/
+
+const showAbout = () => {
 clearTimeout(loopTimer);
+
+bioTimers.forEach(timer => clearTimeout(timer));
+bioTimers = [];
 
 about.classList.add("show");
 
-aboutImg?.classList.remove("loop");
-aboutText?.classList.remove("loop");
+/*==============================
+IMAGE INITIAL STATE
+==============================*/
 
-if(aboutImg){
-aboutImg.style.transition="opacity 1.2s ease,transform 1.2s cubic-bezier(.22,1,.36,1)";
-aboutImg.style.opacity="0";
-aboutImg.style.transform="translateX(-120px)";
+if (aboutImg) {
+aboutImg.classList.remove("loop");
+
+aboutImg.style.transition =
+"opacity 1.2s ease, transform 1.2s cubic-bezier(.22,1,.36,1)";
+
+aboutImg.style.opacity = "0";
+aboutImg.style.transform =
+"translateX(-120px) scale(.92)";
 }
 
-if(aboutText){
-aboutText.style.transition="opacity 1s ease,transform 1s cubic-bezier(.22,1,.36,1)";
-aboutText.style.opacity="0";
-aboutText.style.transform="translateX(70px)";
+/*==============================
+TEXT INITIAL STATE
+==============================*/
+
+if (aboutText) {
+aboutText.classList.remove("loop");
+
+aboutText.style.transition =
+"opacity 1s ease, transform 1s cubic-bezier(.22,1,.36,1)";
+
+aboutText.style.opacity = "0";
+aboutText.style.transform =
+"translateX(100px)";
 }
+
+/*==============================
+BIO INITIAL STATE
+==============================*/
+
+bioItems.forEach(item => {
+item.style.transition = "none";
+item.style.opacity = "0";
+item.style.transform = "translateY(35px)";
+});
+
+/* Force browser reflow */
 
 void about.offsetWidth;
 
-if(aboutImg){
-aboutImg.style.opacity="1";
-aboutImg.style.transform="translateX(0)";
+/*==============================
+IMAGE ANIMATION
+==============================*/
+
+if (aboutImg) {
+requestAnimationFrame(() => {
+aboutImg.style.opacity = "1";
+aboutImg.style.transform =
+"translateX(0) scale(1)";
+});
 }
 
-if(aboutText){
-aboutText.style.opacity="1";
-aboutText.style.transform="translateX(0)";
+/*==============================
+TEXT ANIMATION
+==============================*/
+
+if (aboutText) {
+setTimeout(() => {
+aboutText.style.opacity = "1";
+aboutText.style.transform =
+"translateX(0)";
+}, 180);
 }
 
-bioItems.forEach((item,index)=>{
-item.style.transition="opacity .6s ease,transform .6s ease";
-item.style.opacity="0";
-item.style.transform="translateX(-50px)";
+/*==============================
+BIO STAGGER ANIMATION
+==============================*/
 
-setTimeout(()=>{
-if(about.classList.contains("show")){
-item.style.opacity="1";
-item.style.transform="translateX(0)";
-}
-},index*150);
+bioItems.forEach((item, index) => {
+
+const timer = setTimeout(() => {
+
+if (!about.classList.contains("show")) return;
+
+item.style.transition =
+"opacity .65s ease, transform .65s cubic-bezier(.22,1,.36,1)";
+
+item.style.opacity = "1";
+item.style.transform = "translateY(0)";
+
+}, 450 + index * 140);
+
+bioTimers.push(timer);
+
 });
 
-loopTimer=setTimeout(()=>{
-if(about.classList.contains("show")){
+/*==============================
+START LOOP ANIMATION
+==============================*/
+
+loopTimer = setTimeout(() => {
+
+if (!about.classList.contains("show")) return;
+
 aboutImg?.classList.add("loop");
 aboutText?.classList.add("loop");
-}
-},1300);
+
+}, 1500);
+
 };
 
-const observer=new IntersectionObserver((entries)=>{
-entries.forEach(entry=>{
-if(entry.isIntersecting){
+/*==============================
+INTERSECTION OBSERVER
+==============================*/
+
+const observer = new IntersectionObserver(
+(entries) => {
+
+entries.forEach(entry => {
+
+if (entry.isIntersecting) {
+
 showAbout();
-}else{
+
+} else {
+
 resetAbout();
+
 }
+
 });
-},{
-threshold:.25,
-rootMargin:"0px 0px -15% 0px"
-});
+
+},
+{
+threshold: 0.20,
+rootMargin: "0px 0px -10% 0px"
+}
+);
 
 observer.observe(about);
 
